@@ -16,6 +16,7 @@ class Select:
 		self.targetPrint=[];
 		self.tblname=[];
 		self.where_operation=[]
+
 		#get table name and target print
 		for i in range(1,len(self.statementList)):
 			if self.statementList[i] == "from":
@@ -36,15 +37,28 @@ class Select:
 		#check if the columns exist for target print
 		self.targetPrint=list(filter(None,self.targetPrint))
 		self.tblname=list(filter(None,self.tblname))		
-				
+		print(self.targetPrint)
+		print(self.tblname)	
+		#print(self.where_operation)
+		status=0			
 		for m in range(0,len(self.targetPrint)):
 			if self.targetPrint[m] =="*":
+				status=1
 				break
 			else:
 				for n in range(0,len(self.tblname)):
-					if not(meta.checkcolumnExist(self.tblname[n],self.targetPrint[m])):
-						print ("Column Does Not Exist")
-						return False
+					
+					if (meta.checkcolumnExist(self.tblname[n],self.targetPrint[m])):
+						print(self.tblname[n],self.targetPrint[m])
+						status=1
+						continue
+					else:
+						status=0
+											
+		if status==0:						#print ("Column Does Not Exist")
+			print ("Column Does Not Exist")	
+			return False
+		
 		
 		#check if the table is existing
 		for m in range(0,len(self.tblname)):
@@ -57,24 +71,20 @@ class Select:
 					self.where_operation.append(self.statementList[j])
 
 				
-		print(self.targetPrint)
-		print(self.tblname)	
-		print(self.where_operation)				
+					
 		#for the where clause
 		
 		#print(self.where_operation)
 		if len(self.where_operation)> 0:
 			for i in range(0,len(self.tblname)):
 				for j in range(0,len(self.where_operation)):
-					if not((self.where_operation[j]!= '<' or self.where_operation[j]!= '>' or self.where_operation[j]!= '=' or (self.where_operation[j].isdigit())) and self.where_operation[i] in meta.getAllColumns(self.tblname[i])):
+					if not((self.where_operation[j]!= '<' or self.where_operation[j]!= '>' or self.where_operation[j]!= '=' or (self.where_operation[j].isDigit())) and self.where_operation[i] in meta.getAllColumns(self.tblname[i])):
 						print("Column Does Not Exist")
 						return False
 		return True
 	def make_select(self): 
 		val=self.select_tree()
-		if val==True:
-			self.where_operation=list(filter(None,self.where_operation))				
-			print(self.where_operation)		
+		if val==True:		
 			self.perform_select()
 		
 			
@@ -90,31 +100,19 @@ class Select:
 		result=[]
 		self.counter=0
 		statement=''
-		self.operation = ''
-		self.logicalOperator = ''		
+		print(self.targetPrint)
+		if len(self.where_operation) == 0:
+			print("No where operation")
+			for i in range(0,len(self.targetPrint)):
+				if self.targetPrint[i]=='*':
+					print("print ALL")
+					Data.PrintDataALL(self.tblname,self.database)
+				else:
+					print("columns")
+					Data.PrintColumn(self.tblname,self.targetPrint,self.database)
 
-		for i in range (0,len(self.where_operation)):
-			if self.where_operation[i] == '>':
-				self.operation = self.where_operation[i]				
-				print("ops >")
-			elif self.where_operation[i] == '<':
-				self.operation = self.where_operation[i]
-				print("ops <")
-			elif self.where_operation[i] == '=':
-				self.operation = self.where_operation[i]
-				print("ops =")
-			elif self.where_operation[i] == 'and':
-				self.logicalOperator = self.where_operation[i]				
-				print("and")
-			elif self.where_operation[i] == 'or':
-				self.logicalOperator = self.where_operation[i]	
-				print("or")
-			elif self.where_operation[i].isdigit():
-				self.where_operation[i]=int(self.where_operation[i])
-				print("int/digit: ",self.where_operation[i],"--->type ",type(self.where_operation[i]))
-				
-			else:
-				print("data: ",self.where_operation[i],"--->type ",type(self.where_operation[i]))
+		#for i in range (0,len(self.where_operation)):
+		#	print("ops ",self.where_operation[i],"--->type ",type(self.where_operation[i]))
 			
 			
 	def fetch_data(self):

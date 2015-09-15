@@ -43,6 +43,7 @@ class Select:
 		status=0			
 		for m in range(0,len(self.targetPrint)):
 			if self.targetPrint[m] =="*":
+				status=1
 				break
 			else:
 				for n in range(0,len(self.tblname)):
@@ -55,6 +56,7 @@ class Select:
 						status=0
 											
 		if status==0:						#print ("Column Does Not Exist")
+			print ("Column Does Not Exist")	
 			return False
 		
 		
@@ -128,30 +130,7 @@ class Select:
 
 				
 
-	#def buildTree(self):
-		
-	'''	
-	def check_show(self):
-		for i in range(1,(len(self.statementList))):			
-			if(self.statementList[i]=="*"):
-				if (self.meta).checkTableExist(self.statementList[i+1]):
-											
-					if self.statementList[i+1] in self.database:
-						filer.printData(self.statementList[i+1])	
-					else:						
-						filer.fileRead(self.data)
-						self.database=filer.hashData();
-						filer.printData(self.statementList[i+1])				
-						break
-				
-				else:
-					print ("Table Does Not Exist")
-					break
-			#else:
-				#check columns
-	
-	'''	
-	
+
 		
   
 		
