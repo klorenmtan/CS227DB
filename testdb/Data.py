@@ -59,9 +59,29 @@ class Data:
 		
 
 	def PrintDataALL(tblname, database):
+		return_select=[]
+		datahash=[]		
 		count=0;
 		cross_data=[]
+		no_columns =0
+		k=0
+		for j in range(0,len(tblname)):
+			column=md.getAllColumns(tblname[j])	
+			for i in range(0,len(column)):
+				datahash=Data.getRows(tblname,column[i],database)
+				return_select.append(datahash)
+				print("\n",datahash)
+			datahash=[]
 		
+		
+		
+				
+		#for i in range(0,len(return_select[0])):
+		#	for j in range(0,len(return_select)):
+		#		print("",return_select[j][i],"\t",end='')	
+		#	print()
+				
+		'''
 		for i in range(0,len(tblname)):
 			column=md.getAllColumns(tblname[i])
 			for j in range(0,len(list(database[tblname[i]].keys()))):				
@@ -72,15 +92,26 @@ class Data:
 				count=count+1					
 
 		print(count,"rows returned") 
-
+		'''
+		print("val: ",no_columns)
 	def getRows(tblname,column_name,database):
 		datahash=[]
-		for i in range(0,len(tblname)):
-			for j in range(0,len(list(database[tblname[i]].keys()))):
-				if column_name in database[tblname[i]][(list(database[tblname[i]].keys()))[j]]:
-					datahash.append(database[tblname[i]][(list(database[tblname[i]].keys()))[j]][column_name])
-				else:
-					break
+		
+		for i in range(0,len(tblname)):			
+			if len(tblname)>0:		
+				for j in range(0,len(list(database[tblname[i]].keys()))):
+					if column_name in database[tblname[i]][(list(database[tblname[i]].keys()))[j]]:
+						datahash.append(database[tblname[i]][(list(database[tblname[i]].keys()))[j]][column_name])
+					else:
+						continue
+			'''else:
+				print("HEHHEHEE222")
+				for j in range(0,len(list(database[tblname].keys()))):		
+					if column_name in database[tblname][(list(database[tblname].keys()))[j]]:
+						datahash.append(database[tblname][(list(database[tblname].keys()))[j]][column_name])
+					else:
+						break		
+			'''
 		return datahash	
 
 			
@@ -97,6 +128,7 @@ class Data:
 		for i in range(0,len(targetPrint)):
 			print(targetPrint[i],"\t",end='')
 		print()
+		'''
 		if len(targetPrint)==0:
 			for i in range(0,length):
 				for j in range(0,len(return_select)):
@@ -113,7 +145,8 @@ class Data:
 				print()
 				count=count+1
 		print(count,"rows returned")
-		
+		'''
+		print(return_select)
 
 
 
