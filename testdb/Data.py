@@ -1,4 +1,5 @@
 from Metadata import *
+import itertools
 class Data:
 
 	def __init__(self,tbldata,tblname):
@@ -59,7 +60,7 @@ class Data:
 		
 
 	def PrintDataALL(tblname, database):
-		return_select=[]
+		return_data=[]
 		datahash=[]		
 		count=0;
 		cross_data=[]
@@ -67,86 +68,65 @@ class Data:
 		k=0
 		for j in range(0,len(tblname)):
 			column=md.getAllColumns(tblname[j])	
-			for i in range(0,len(column)):
-				datahash=Data.getRows(tblname,column[i],database)
-				return_select.append(datahash)
-				print("\n",datahash)
-			datahash=[]
-		
-		
-		
-				
-		#for i in range(0,len(return_select[0])):
-		#	for j in range(0,len(return_select)):
-		#		print("",return_select[j][i],"\t",end='')	
-		#	print()
-				
-		'''
-		for i in range(0,len(tblname)):
-			column=md.getAllColumns(tblname[i])
-			for j in range(0,len(list(database[tblname[i]].keys()))):				
-				for k in range(0,len(column)):			
-					print("",database[tblname[i]][(list(database[tblname[i]].keys()))[j]][column[k]],"\t",end='')
-					
-				print()
-				count=count+1					
 
-		print(count,"rows returned") 
-		'''
-		print("val: ",no_columns)
+			#print("COLUMN CONTENT\n\n",column)
+			datahash=Data.getRows(tblname[j],column,database)
+			return_data.append(datahash)
+		#print("HELLOW\n",return_data)
+		#print(len(return_data))
+		
+
+	#def CrossProduct(return_data):
+		#for i in range(0, len(return_data),2):
+			#print(return_data)
+				
+		
 	def getRows(tblname,column_name,database):
+		return_data=[]
 		datahash=[]
-		
-		for i in range(0,len(tblname)):			
-			if len(tblname)>0:		
-				for j in range(0,len(list(database[tblname[i]].keys()))):
-					if column_name in database[tblname[i]][(list(database[tblname[i]].keys()))[j]]:
-						datahash.append(database[tblname[i]][(list(database[tblname[i]].keys()))[j]][column_name])
-					else:
-						continue
-			'''else:
-				print("HEHHEHEE222")
-				for j in range(0,len(list(database[tblname].keys()))):		
-					if column_name in database[tblname][(list(database[tblname].keys()))[j]]:
-						datahash.append(database[tblname][(list(database[tblname].keys()))[j]][column_name])
-					else:
-						break		
-			'''
-		return datahash	
+		data = []
+		counter=0
 
-			
+		for j in range(0,len(list(database[tblname].keys()))):
+			for i in range(0,len(list(column_name))):
+				if column_name[i] in database[tblname][(list(database[tblname].keys()))[j]]:
+					data.append(database[tblname][(list(database[tblname].keys()))[j]][column_name[i]])
+					#print(data)	
+			datahash.append(data)
+			data=[]
+				
+		return datahash
+
+	
+		
 	def PrintColumn(tblname,targetPrint,database):
 		length=0
 		count=0
+		
 		return_select=[]
+		return_data = []
 		datahash=list()
-		for i in range (0,len(targetPrint)):
-			datahash=Data.getRows(tblname,targetPrint[i],database)
-			length=len(datahash)+length
-			return_select.append(datahash)	
-		print(return_select)
-		for i in range(0,len(targetPrint)):
-			print(targetPrint[i],"\t",end='')
-		print()
-		'''
-		if len(targetPrint)==0:
-			for i in range(0,length):
-				for j in range(0,len(return_select)):
-					print(return_select[j][i],"\t",end='')
+		
+		for i in range(0,len(tblname)):		
+			datahash=Data.getRows(tblname[i],targetPrint,database)
+			return_data.append(datahash)
+		
+		#print(return_data)
+		a=[]
+		a=return_data[0]		
+		if len(return_data) > 1:
+			for i in range(1,len(return_data)):
+				#a=return_data[i]
+				#if i+2 < len(return_data):		
+				a=(list(itertools.product(a,return_data[i])))
 				
-				print()
-				count=count+1
-			
-		else:
-			for i in range(0,length//(len(targetPrint))):
-				for j in range(0,len(return_select)):
-					print(return_select[j][i],"\t",end='')
-				
-				print()
-				count=count+1
-		print(count,"rows returned")
-		'''
-		print(return_select)
+			#print("CROSSPRODUCT\n\n\n\n\n\n\n\n\n",a)
+
+		print(len(a),"rows returned")
+	
+	
+		
+		#print(return_select)
 
 
 

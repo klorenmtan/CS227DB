@@ -86,16 +86,11 @@ class Select:
 		val=self.select_tree()
 		if val==True:		
 			self.perform_select()
-		
-			
 
 	def perform_select(self):
 		self.fetch_data()
 		self.perform_operations()
-		#perform operations pass the list of operations
-		#returns list of primary key + data
-		#prints it
-
+		
 	def perform_operations(self):
 		result=[]
 		self.counter=0
@@ -111,8 +106,6 @@ class Select:
 					print("columns")
 					Data.PrintColumn(self.tblname,self.targetPrint,self.database)
 
-		#for i in range (0,len(self.where_operation)):
-		#	print("ops ",self.where_operation[i],"--->type ",type(self.where_operation[i]))
 			
 			
 	def fetch_data(self):
@@ -126,7 +119,7 @@ class Select:
 				self.database[self.tblname[i]]=array1
 				
 
-		print(self.database.keys())
+		#print(self.database.keys())
 
 				
 
