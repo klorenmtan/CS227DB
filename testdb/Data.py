@@ -123,7 +123,8 @@ class Data:
 			#print("CROSSPRODUCT\n\n\n\n\n\n\n\n\n",a)
 
 		print(len(a),"rows returned")
-	
+		print(list(a[0][0]))
+		print(list(a[0][1]))
 	
 		
 		#print(return_select)
