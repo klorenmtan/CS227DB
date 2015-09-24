@@ -1,5 +1,6 @@
 from Metadata import *
 import itertools
+
 class Data:
 
 	def __init__(self,tbldata,tblname):
@@ -11,6 +12,7 @@ class Data:
 		self.clean_data = {}
 		self.getPrimary()
 		self.addToHash()
+
 
 	def getPrimary(self):
 		self.primary_keys=[]
@@ -57,29 +59,75 @@ class Data:
 				
 	def getDataHash(self):
 		return self.clean_data
+
+	def printData(datahash,tblname,typedata):
+		for j in range(0,len(tblname)):
+			column=md.getAllColumns(tblname[j])
+			for i in range(len(column)):	
+				print("%10s"%(column[i]),"\t",end='')
+		print()
+		if typedata == 1:
+			for i in range(0,len(datahash)):
+				for j in range(0,len(datahash[i])):
+					print("%10s"%(datahash[i][j]),"\t",end='')
+				print()
+		elif typedata == 2:
+			for i in range(0,len(datahash)):
+				for j in range(0,len(datahash[i])):		
+					if (type(datahash[i])) is tuple:					
+						for k in range(0,len(datahash[i][j])):
+							if type(datahash[i][j][k]) is list:
+								for m in range(0,len(datahash[i][j][k])):
+									if type(datahash[i][j][k][m]) is list:
+										for n in range (0, len(datahash[i][j][k][m])):
+											print("%10s"%(str(datahash[i][j][k][m][n])),"\t",end='')
+											#print(type(datahash[i][j][k][m][n]))
+												
+									else:	
+										#print(type(datahash[i][j][k][m]))						
+										print("%10s"%(str(datahash[i][j][k][m])),"\t",end='') 															
+							else:			
+								print("%10s"%(str(datahash[i][j][k])),"\t",end='')
+					print()
+
+		
 		
 
 	def PrintDataALL(tblname, database):
+				
 		return_data=[]
 		datahash=[]		
 		count=0;
 		cross_data=[]
-		no_columns =0
 		k=0
 		for j in range(0,len(tblname)):
 			column=md.getAllColumns(tblname[j])	
-
-			#print("COLUMN CONTENT\n\n",column)
 			datahash=Data.getRows(tblname[j],column,database)
 			return_data.append(datahash)
-		#print("HELLOW\n",return_data)
-		#print(len(return_data))
 		
-
-	#def CrossProduct(return_data):
-		#for i in range(0, len(return_data),2):
-			#print(return_data)
+		a=[]
+		a=return_data[0]		
+		j=0
+		if len(tblname) > 1:
+			for i in range(1,len(return_data)):
+				a=(list(itertools.product(return_data[i])))		
+			#a=list(map(list,a))
+			#print(a)		
+			#for i in a:
+				#print(i)
+			#	b=list(map(list,i))
+			#	c=list(itertools.chain.from_iterable(b))
+				#d=list(itertools.chain.from_iterable(c))
+				#c=list(map(list,b))
 				
+			print(a)			
+			#Data.printData(a,tblname,2)
+			#list2=list(itertools.chain.from_iterable(a[0]))
+			print(len(a),"rows returned")		
+		else:
+			Data.printData(return_data[0],tblname,1)
+			print(len(return_data[0]),"rows returned")	
+			
 		
 	def getRows(tblname,column_name,database):
 		return_data=[]
@@ -90,11 +138,9 @@ class Data:
 		for j in range(0,len(list(database[tblname].keys()))):
 			for i in range(0,len(list(column_name))):
 				if column_name[i] in database[tblname][(list(database[tblname].keys()))[j]]:
-					data.append(database[tblname][(list(database[tblname].keys()))[j]][column_name[i]])
-					#print(data)	
+					data.append(database[tblname][(list(database[tblname].keys()))[j]][column_name[i]])						
 			datahash.append(data)
 			data=[]
-				
 		return datahash
 
 	
@@ -106,28 +152,22 @@ class Data:
 		return_select=[]
 		return_data = []
 		datahash=list()
-		
+		printMe()
 		for i in range(0,len(tblname)):		
 			datahash=Data.getRows(tblname[i],targetPrint,database)
 			return_data.append(datahash)
 		
-		#print(return_data)
+		
 		a=[]
 		a=return_data[0]		
 		if len(return_data) > 1:
 			for i in range(1,len(return_data)):
-				#a=return_data[i]
-				#if i+2 < len(return_data):		
-				a=(list(itertools.product(a,return_data[i])))
-				
-			#print("CROSSPRODUCT\n\n\n\n\n\n\n\n\n",a)
+				a=(list(itertools.product(a,return_data[i])))			
+			print(len(a),"rows returned")
+		else:
+			print(len(return_data[0]),"rows returned")
 
-		print(len(a),"rows returned")
-		print(list(a[0][0]))
-		print(list(a[0][1]))
+
 	
-		
-		#print(return_select)
-
 
 

@@ -67,7 +67,6 @@ class Select:
 				return False				
 			else:
 				for j in range(k,len(self.statementList)):
-					
 					self.where_operation.append(self.statementList[j])
 
 				
@@ -98,13 +97,10 @@ class Select:
 		print(self.targetPrint)
 		if len(self.where_operation) == 0:
 			print("No where operation")
-			for i in range(0,len(self.targetPrint)):
-				if self.targetPrint[i]=='*':
-					print("print ALL")
-					Data.PrintDataALL(self.tblname,self.database)
-				else:
-					print("columns")
-					Data.PrintColumn(self.tblname,self.targetPrint,self.database)
+			if self.targetPrint[0]=='*':
+				Data.PrintDataALL(self.tblname,self.database)
+			else:
+				Data.PrintColumn(self.tblname,self.targetPrint,self.database)
 
 			
 			
