@@ -34,12 +34,10 @@ class Select:
 			else:
 				self.targetPrint.append(self.statementList[i])
 		
-		#check if the columns exist for target print
 		self.targetPrint=list(filter(None,self.targetPrint))
 		self.tblname=list(filter(None,self.tblname))		
 		print(self.targetPrint)
 		print(self.tblname)	
-		#print(self.where_operation)
 		status=0			
 		for m in range(0,len(self.targetPrint)):
 			if self.targetPrint[m] =="*":
@@ -101,7 +99,9 @@ class Select:
 				Data.PrintDataALL(self.tblname,self.database)
 			else:
 				Data.PrintColumn(self.tblname,self.targetPrint,self.database)
-
+		else:
+			print(self.where_operation)
+			
 			
 			
 	def fetch_data(self):

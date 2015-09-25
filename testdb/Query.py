@@ -9,6 +9,7 @@ class Query:
 		stat = (self.query).split(" ");
 		self.operation = stat[0]
 		if(self.operation=="select"):
+			print(stat)
 			query1 = Select(stat,self.database);
 			query1.make_select();	
 

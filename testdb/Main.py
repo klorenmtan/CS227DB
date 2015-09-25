@@ -18,7 +18,7 @@ class Main:
 		else:
 			q1=Query(statement,database)
 			q1.classify_query();
-		
+			
 		
 
 
