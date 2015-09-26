@@ -36,8 +36,6 @@ class Select:
 		
 		self.targetPrint=list(filter(None,self.targetPrint))
 		self.tblname=list(filter(None,self.tblname))		
-		print(self.targetPrint)
-		print(self.tblname)	
 		status=0			
 		for m in range(0,len(self.targetPrint)):
 			if self.targetPrint[m] =="*":
@@ -45,8 +43,11 @@ class Select:
 				break
 			else:
 				for n in range(0,len(self.tblname)):
-					
-					if (meta.checkcolumnExist(self.tblname[n],self.targetPrint[m])):
+					if self.targetPrint[m] == ".":
+						meta.checkcolumnExist(self.targetPrint[m-1],self.targetPrint[m+1])
+						status=1
+						break
+					elif (meta.checkcolumnExist(self.tblname[n],self.targetPrint[m])):
 						print(self.tblname[n],self.targetPrint[m])
 						status=1
 						continue
@@ -90,20 +91,101 @@ class Select:
 		
 	def perform_operations(self):
 		result=[]
+		r1=[]
 		self.counter=0
 		statement=''
 		print(self.targetPrint)
 		if len(self.where_operation) == 0:
 			print("No where operation")
 			if self.targetPrint[0]=='*':
-				Data.PrintDataALL(self.tblname,self.database)
+				result=Data.PrintDataALL(self.tblname,self.database)
+				
 			else:
-				Data.PrintColumn(self.tblname,self.targetPrint,self.database)
+				result=Data.PrintColumn(self.tblname,self.targetPrint,self.database)
+			Data.printData(result,self.tblname,self.targetPrint)
+			print(len(result),"rows returned")
 		else:
-			print(self.where_operation)
+			columns=[]
+			
+			result=Data.PrintDataALL(self.tblname,self.database)
+			print(self.where_operation)				
+			for j in range(0,len(self.tblname)):
+				columns.extend(meta.getAllColumns(self.tblname[j]))
+			
+			r1=Select.classify_where(self.where_operation,result,columns)			
+			if self.targetPrint[0]=='*':
+				Data.printData(r1,self.tblname,self.targetPrint)												
+			else:	
+				Data.printDataWhere(r1,self.tblname,self.targetPrint,columns)
+			print(len(r1),"rows returned")
+
+	def checkMatch(typeop,column,data,datahash,index):
+		
+		results=[]
+		print(index)
+		if typeop == 1:
+			for i in range(0,len(datahash)):
+				if type(datahash[i][index]) == int:
+					if datahash[i][index] < int(data):
+						results.append(datahash[i])		
+				elif type(datahash[i][index]) == float:
+					if datahash[i][index] < float(data):
+						results.append(datahash[i])
+				else:
+					print("Conflicting types!")					
+			print(results)
+				
+		elif typeop == 2:
+			for i in range(0,len(datahash)):
+				if type(datahash[i][index]) == int:
+					if datahash[i][index] > int(data):
+						results.append(datahash[i])		
+				elif type(datahash[i][index]) == float:
+					if datahash[i][index] > float(data):
+						results.append(datahash[i])
+				else:
+					print("Conflicting types!")						
+			print(results)
+
+		elif typeop == 3:		
+			for i in range(0,len(datahash)):
+				if type(datahash[i][index]) == int:
+					if datahash[i][index] == int(data):
+						results.append(datahash[i])		
+				elif type(datahash[i][index]) == float:
+					if datahash[i][index] == float(data):
+						results.append(datahash[i])
+				elif type(datahash[i][index]) == str:
+					if datahash[i][index] == (data):
+						results.append(datahash[i])	
+				else:
+					print("Conflicting types!")					
+			print(results)
+		return results
+	
+	def classify_where(operation,datahash,columns):
+		result=[]		
+		index=[]		
+		if len(operation) == 3:
+			print("single where")
 			
 			
+			for i in range(0,len(columns)):
+				if operation[0] == columns[i]:
+					index.append(i)
+				
 			
+			#for i in range(0,len(operation)):
+			if operation[1] == '<':
+				result=Select.checkMatch(1,operation[0],operation[2],datahash,index[0])
+			elif operation[1] == '>':
+				result=Select.checkMatch(2,operation[0],operation[2],datahash,index[0])
+			elif operation[1] == '=':
+				result=Select.checkMatch(3,operation[0],operation[2],datahash,index[0]) 
+								
+		else:
+			print("complex where")		
+		return result	
 	def fetch_data(self):
 		array1 = {}
 		
@@ -115,7 +197,7 @@ class Select:
 				self.database[self.tblname[i]]=array1
 				
 
-		#print(self.database.keys())
+		
 
 				
 

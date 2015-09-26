@@ -42,8 +42,8 @@ class Metadata:
 			if tblNames[i] in tblname:
 				return True
 		return False
-		
-
+	
+	
 	def getAllColumns(self,tblname):
 		columns=[]
 		j=2
@@ -70,5 +70,13 @@ class Metadata:
 				if colname == columns[i]:
 					return True
 			return False 
+
+	def getIndex(self,tblname,colname):
+		columns=self.getAllColumns(tblname)
+		if self.checkTableExist(tblname):
+			for i in range(0,len(self.getAllColumns(tblname))):
+				if colname == columns[i]:
+					return i
+			
 		
 				

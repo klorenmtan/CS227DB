@@ -60,22 +60,62 @@ class Data:
 	def getDataHash(self):
 		return self.clean_data
 
-	def printData(datahash,tblname):
-		for j in range(0,len(tblname)):
-			column=md.getAllColumns(tblname[j])
-			for i in range(len(column)):	
-				print("%5s"%(column[i]),"\t",end='')
-			print()
+	def printData(datahash,tblname,targetPrint):
+		if len(targetPrint) == 0:
+			for j in range(0,len(tblname)):
+				column=md.getAllColumns(tblname[j])
+				for i in range(len(column)):	
+					print("%10s"%(column[i]),"\t",end='')
+				print()
+		else:
+			for j in range(0,len(tblname)):
+				for i in range(len(targetPrint)):
+					if targetPrint[i] == tblname[j] or targetPrint[i] == '.':
+						continue
+					else:	
+						print("%10s"%(targetPrint[i]),"\t",end='')
+				print()
+			
 		
 		for i in range(0,len(datahash)):
 			for j in range(0,len(datahash[i])):
 				if(len(str(datahash[i][j]))>5):
-					print("%5s"%(str(datahash[i][j])[0:9])+"..","\t",end='')	
+					print("%10s"%(str(datahash[i][j])[0:8])+"..","\t",end='')	
 				else:				
-					print("%5s"%(datahash[i][j]),"\t",end='')
+					print("%10s"%(datahash[i][j]),"\t",end='')
 			print()
 
 	
+	def printDataWhere(datahash,tblname,targetPrint,columns):
+		index=[]		
+		if len(targetPrint) == 0:
+			for j in range(0,len(tblname)):
+				column=md.getAllColumns(tblname[j])
+				for i in range(len(column)):	
+					print("%10s"%(column[i]),"\t",end='')
+				print()
+		else:
+			for j in range(0,len(tblname)):
+				for i in range(len(targetPrint)):
+					if targetPrint[i] == tblname[j] or targetPrint[i] == '.':
+						continue
+					else:	
+						print("%10s"%(targetPrint[i]),"\t",end='')
+				print()
+				
+		#for i in range(0,len(columns)):
+		for i in range(0,len(tblname)):
+			for j in range(0,len(targetPrint)):
+				index.append(md.getIndex(tblname[i],targetPrint[j]))	
+			
+		print(index)
+		for i in range(0,len(datahash)):
+			for j in range(0,len(index)):
+				if(len(str(datahash[i][index[j]]))>5):
+					print("%10s"%(str(datahash[i][index[j]])[0:8])+"..","\t",end='')	
+				else:				
+					print("%10s"%(datahash[i][index[j]]),"\t",end='')
+			print()	
 				
 	def crossProduct(list1, list2):
 		list4=[]		
@@ -98,19 +138,16 @@ class Data:
 			return_data.append(datahash)
 
 		print(return_data)
-		
+		targetPrint=[]
 		a=[]
 		a=return_data[0]		
 		j=0
 		if len(tblname) > 1:
 			for i in range(1,len(return_data)):			
 				a=Data.crossProduct(a,return_data[i])			
-			Data.printData(a,tblname)
-			print(len(a),"rows returned")		
+			return a			
 		else:
-			Data.printData(return_data[0],tblname)
-			print(len(return_data[0]),"rows returned")	
-			
+			return return_data[0]	
 		
 	def getRows(tblname,column_name,database):
 		return_data=[]
@@ -146,11 +183,10 @@ class Data:
 		if len(tblname) > 1:
 			for i in range(1,len(return_data)):			
 				a=Data.crossProduct(a,return_data[i])			
-			Data.printData(a,tblname)
-			print(len(a),"rows returned")
+			return a			
 		else:
-			print(len(return_data[0]),"rows returned")
-
+			return return_data[0]
+		
 
 	
 

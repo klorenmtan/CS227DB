@@ -11,8 +11,12 @@ class Main:
 	while statement!='quit':
 		statement=input("SQL>")
 		statement=statement.lower()
-		statement=statement.replace(","," ")
+		statement=statement.replace('\"',"")
+		statement=statement.replace('\'',"")	
+		statement=statement.replace(",","|")
+		
 
+		print(statement)
 		if statement == 'quit':
 			break
 		else:
